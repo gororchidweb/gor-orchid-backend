@@ -1,5 +1,32 @@
 components:
   schemas:
+    Field:
+      type: object
+      properties:
+        id:
+          type: string
+        fieldName:
+          type: string
+        fieldType:
+          type: string
+          enum: ['Regular', 'VIP']
+        price:
+          type: string
+        timeslots:
+          type: array
+        desc:
+          type: string
+        imgUrl:
+          type: string
+      example:
+        id: 5ebac534954b54139806c112
+        fieldName: L1
+        fieldType: Regular
+        price: 100000
+        timeslots: ['8-10', '10-12']
+        desc: Regular badminton field
+        imgUrl: none
+
     User:
       type: object
       properties:
