@@ -1,5 +1,33 @@
 components:
   schemas:
+    Booking:
+      type: object
+      properties:
+        userId:
+          type: string
+        fieldId:
+          type: string
+        bookingDate:
+          type: string
+        bookingStatus:
+          type: string
+          enum: ['CONFIRMED', 'CANCELLED', 'RESERVED']
+        paymentStatus:
+          type: string
+          enum: ['PAID', 'UNPAID']
+        startTime:
+          type: string
+        endTime:
+          type: string
+      example:
+        userId:  '61eff899c53549003313d079'
+        fieldId: '61eff899a648348787287171'
+        bookingDate: '31-01-2022'
+        bookingStatus: 'CONFIRMED'
+        paymentStatus: 'UNPAID'
+        startTime:  '8:00'
+        endTime: '10:00'
+
     Field:
       type: object
       properties:
