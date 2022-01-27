@@ -4,7 +4,7 @@ const ApiError = require('../utils/ApiError');
 
 /**
  * Create a field
- * @param {Object} userBody
+ * @param {Object} fieldBody
  * @returns {Promise<Field>}
  */
 const createField = async (fieldBody) => {
@@ -58,7 +58,7 @@ const updateFieldById = async (fieldId, updateBody) => {
 const deleteFieldById = async (fieldId) => {
   const field = await getFieldById(fieldId);
   if (!field) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Field not found');
   }
   await field.remove();
   return field;
