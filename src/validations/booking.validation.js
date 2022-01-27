@@ -15,13 +15,16 @@ const createBooking = {
 
 const getBookings = {
   query: Joi.object().keys({
-    userId: Joi.string().custom(objectId).required(),
-    fieldId: Joi.string().custom(objectId).required(),
-    bookingDate: Joi.string().required(),
-    bookingStatus: Joi.string().required().valid('CONFIRMED', 'CANCELLED', 'RESERVED'),
-    paymentStatus: Joi.string().required().valid('PAID', 'UNPAID', 'RESERVED'),
-    startTime: Joi.string().required(),
-    endTime: Joi.string().required(),
+    userId: Joi.string().custom(objectId),
+    fieldId: Joi.string().custom(objectId),
+    bookingDate: Joi.string(),
+    bookingStatus: Joi.string().valid('CONFIRMED', 'CANCELLED', 'RESERVED'),
+    paymentStatus: Joi.string().valid('PAID', 'UNPAID', 'RESERVED'),
+    startTime: Joi.string(),
+    endTime: Joi.string(),
+    sortBy: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
   }),
 };
 
