@@ -23,6 +23,7 @@ const getBookings = {
     startTime: Joi.string(),
     endTime: Joi.string(),
     sortBy: Joi.string(),
+    populate: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
   }),

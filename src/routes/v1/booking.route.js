@@ -104,7 +104,11 @@ module.exports = router;
  *         name: sortBy
  *         schema:
  *           type: string
- *         description: sort by query in the form of booking:desc/asc (ex. name:asc)
+ *       - in: query
+ *         name: populate
+ *         schema:
+ *           type: string
+ *         description: Populate data fields. Hierarchy of fields should be separated by (.). Multiple populating criteria should be separated by commas (,)
  *       - in: query
  *         name: limit
  *         schema:

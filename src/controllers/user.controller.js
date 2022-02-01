@@ -13,6 +13,10 @@ const getUsers = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name', 'role']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await userService.queryUsers(filter, options);
+  const { page, limit, totalResults } = result;
+  // console.log({ page, limit, totalPages, totalResults });
+  res.set('Access-Control-Expose-Headers', 'Content-Range');
+  res.set('Content-Range', `users ${page}-${limit}/${totalResults}`);
   res.send(result);
 });
 

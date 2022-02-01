@@ -13,6 +13,9 @@ const getFields = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['fieldName']);
   const options = pick(req.query, ['sortyBy', 'limit', 'page']);
   const result = await fieldService.queryFields(filter, options);
+  const { page, limit, totalResults } = result;
+  res.set('Access-Control-Expose-Headers', 'Content-Range');
+  res.set('Content-Range', `users ${page}-${limit}/${totalResults}`);
   res.send(result);
 });
 
