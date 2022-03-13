@@ -9,7 +9,7 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('manageFields'), validate(fieldValidation.createField), fieldController.createField)
-  .get(auth('getFields'), validate(fieldValidation.getFields), fieldController.getFields);
+  .get(validate(fieldValidation.getFields), fieldController.getFields);
 
 router
   .route('/:fieldId')

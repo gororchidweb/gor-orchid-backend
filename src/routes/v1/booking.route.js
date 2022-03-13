@@ -9,7 +9,7 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('manageBookings'), validate(bookingValidation.createBooking), bookingController.createBooking)
-  .get(auth('getBookings'), validate(bookingValidation.getBookings), bookingController.getBookings);
+  .get(validate(bookingValidation.getBookings), bookingController.getBookings);
 
 router
   .route('/:bookingId')
