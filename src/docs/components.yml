@@ -119,6 +119,7 @@ components:
           enum: ['PAID', 'UNPAID']
       example:
         amount: 100000
+        phone: 08117777548
         name:   'John Doe'
         email:  'john.doe@gmail.com'
         userId: '61eff899c53549003313d079'

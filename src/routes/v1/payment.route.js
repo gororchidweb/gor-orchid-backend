@@ -74,6 +74,7 @@ module.exports = router;
  *                 enum: ['PAID', 'UNPAID']
  *             example:
  *               amount: 100000
+ *               phone: 081177777548
  *               name:   'John Doe'
  *               email:  'john.doe@gmail.com'
  *               userId: '61eff899c53549003313d079'
@@ -273,6 +274,7 @@ module.exports = router;
  *                 enum: ['PAID', 'UNPAID']
  *             example:
  *               amount: 100000
+ *               phone: 081177777548
  *               name:   'Alexis Sanchez'
  *               email: 'alexis.sanchez@gmail.com'
  *               userId:  '61eff899c53549003313d079'
