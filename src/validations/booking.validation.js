@@ -3,7 +3,10 @@ const { objectId } = require('./custom.validation');
 
 const createBooking = {
   body: Joi.object().keys({
-    userId: Joi.string().custom(objectId).required(),
+    name: Joi.string().required(),
+    email: Joi.string().required().email(),
+    phone: Joi.number().required(),
+    userId: Joi.string().custom(objectId),
     fieldId: Joi.string().custom(objectId).required(),
     bookingDate: Joi.string().required(),
     bookingStatus: Joi.string().required().valid('CONFIRMED', 'CANCELLED', 'RESERVED'),

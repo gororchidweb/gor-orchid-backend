@@ -3,12 +3,15 @@ const validator = require('validator');
 const { toJSON, paginate } = require('./plugins');
 // const { tokenTypes } = require('../config/tokens');
 
-const bookingSchema = mongoose.Schema(
+const paymentSchema = mongoose.Schema(
   {
+    amount: {
+      type: Number,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
-      trim: true,
     },
     email: {
       type: String,
@@ -29,32 +32,22 @@ const bookingSchema = mongoose.Schema(
     userId: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'User',
-      // required: true,
+    },
+    bookingId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'Booking',
     },
     fieldId: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'Field',
-      required: true,
     },
-    bookingDate: {
+    transactionStatus: {
       type: String,
-      required: true,
-    },
-    bookingStatus: {
-      type: String,
-      enum: ['CONFIRMED', 'CANCELLED', 'RESERVED'],
-      required: true,
+      enum: ['PENDING', 'SUCCESS', 'FAILED', 'EXPIRED', 'TIMEOUT', 'REDIRECT'],
     },
     paymentStatus: {
       type: String,
-      enum: ['PAID', 'UNPAID'],
-      required: true,
-    },
-    startTime: {
-      type: String,
-    },
-    endTime: {
-      type: String,
+      enum: ['PAID', 'UNPAID', 'RESERVED'],
     },
   },
   {
@@ -63,12 +56,12 @@ const bookingSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-bookingSchema.plugin(toJSON);
-bookingSchema.plugin(paginate);
+paymentSchema.plugin(toJSON);
+paymentSchema.plugin(paginate);
 
 /**
  * @typedef Token
  */
-const Booking = mongoose.model('Booking', bookingSchema);
+const Payment = mongoose.model('Payment', paymentSchema);
 
-module.exports = Booking;
+module.exports = Payment;

@@ -94,6 +94,39 @@ components:
         refresh:
           $ref: '#/components/schemas/Token'
 
+    Payment:
+      type: object
+      properties:
+        amount:
+          type: number
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: number
+        userId:
+          type: string
+        fieldId:
+          type: string
+        bookingId:
+          type: string
+        transactionStatus:
+          type: string
+          enum: ['PENDING', 'SUCCESS', 'FAILED', 'EXPIRED', 'TIMEOUT', 'REDIRECT']
+        paymentStatus:
+          type: string
+          enum: ['PAID', 'UNPAID']
+      example:
+        amount: 100000
+        name:   'John Doe'
+        email:  'john.doe@gmail.com'
+        userId: '61eff899c53549003313d079'
+        fieldId: '61eff899a648348787287171'
+        bookingId: '61eff899a648348787287171'
+        transactionStatus: 'PENDING'
+        paymentStatus: 'UNPAID'
+
     Error:
       type: object
       properties:
