@@ -87,20 +87,12 @@ const createPayment = async (paymentBody) => {
     },
     data: paymentData,
   };
-  try {
-    // const resp = await axios.get('https://swapi.dev/api/people/1/');
-    axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  } catch (error) {
-    console.log('paymentGatewayError', error.message);
+  // const resp = await axios.get('https://swapi.dev/api/people/1/');
+  const response = await axios(config);
+  if (!response) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error creating payment');
   }
-
-
+  return response.data;
 };
 
 /**
