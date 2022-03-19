@@ -43,6 +43,7 @@ const updateField = {
       fieldName: Joi.string(),
       fieldType: Joi.string(),
       timeslots: Joi.array(),
+      price: Joi.number(),
       desc: Joi.string(),
       imgUrl: Joi.string(),
     })
