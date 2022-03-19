@@ -13,7 +13,7 @@ router
 
 router
   .route('/:bookingId')
-  .get(auth('getBookings'), validate(bookingValidation.getBooking), bookingController.getBooking)
+  .get(validate(bookingValidation.getBooking), bookingController.getBooking)
   .patch(auth('manageBookings'), validate(bookingValidation.updateBooking), bookingController.updateBooking)
   .delete(auth('manageBookings'), validate(bookingValidation.deleteBooking), bookingController.deleteBooking);
 

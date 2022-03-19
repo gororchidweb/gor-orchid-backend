@@ -47,11 +47,13 @@ const createPayment = async (paymentBody) => {
   const url = process.env.PAYMENT_GATEWAY;
   const secretKey = process.env.PAYMENT_GATEWAY_SECRET_KEY;
   const clientId = process.env.PAYMENT_GATEWAY_CLIENT_ID;
+  const clientDomain = process.env.DOMAIN;
 
   const paymentData = JSON.stringify({
     order: {
       amount: paymentBody.amount,
-      invoice_number: paymentBody.bookingId,
+      invoice_number: paymentBody.bookingId + uuid.v4(),
+      callback_url: `${clientDomain}/booking/${paymentBody.bookingId}`,
     },
     payment: {
       payment_due_date: 60,
