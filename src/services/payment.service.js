@@ -44,19 +44,26 @@ function generateSignature(jsonBody, { requestId, requestTimestamp, secretKey, c
 const createPayment = async (paymentBody) => {
   const requestId = uuid.v4();
   const requestTimestamp = `${new Date().toISOString().slice(0, 19)}Z`;
-  const url = process.env.PAYMENT_GATEWAY;
+  const url = `${process.env.PAYMENT_GATEWAY}/checkout/v1/payment`;
   const secretKey = process.env.PAYMENT_GATEWAY_SECRET_KEY;
   const clientId = process.env.PAYMENT_GATEWAY_CLIENT_ID;
   const clientDomain = process.env.DOMAIN;
-
+  const timestamp = Math.floor(new Date().getTime() / 1000);
   const paymentData = JSON.stringify({
     order: {
       amount: paymentBody.amount,
-      invoice_number: paymentBody.bookingId + uuid.v4(),
+      // invoice_number: `${paymentBody.bookingId}-${uuid.v4()}`,
+      currency: 'IDR',
+      invoice_number: `INV-GORORCHID-${timestamp}`,
       callback_url: `${clientDomain}/booking/${paymentBody.bookingId}`,
     },
     payment: {
       payment_due_date: 60,
+    },
+    customer: {
+      name: paymentBody.name,
+      email: paymentBody.email,
+      phone: `+62${paymentBody.phone}`,
     },
   });
 
