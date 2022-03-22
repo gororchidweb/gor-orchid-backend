@@ -13,9 +13,6 @@ const ApiError = require('../utils/ApiError');
 function generateSignature(jsonBody, { requestId, requestTimestamp, secretKey, clientId }) {
   const digestSHA256 = CryptoJS.SHA256(CryptoJS.enc.Utf8.parse(jsonBody));
   const digestBase64 = CryptoJS.enc.Base64.stringify(digestSHA256);
-  console.log(`Digest Component: ${JSON.stringify(jsonBody, null, 2)}`);
-  console.log(`Digest sha256: ${digestSHA256}`);
-  console.log(`Digest: ${digestBase64}`);
   const signatureComponents =
     `Client-Id:${clientId}\n` +
     `Request-Id:${requestId}\n` +
@@ -25,9 +22,6 @@ function generateSignature(jsonBody, { requestId, requestTimestamp, secretKey, c
     `Digest:${digestBase64}`;
   const signatureHmacSha256 = CryptoJS.HmacSHA256(signatureComponents, secretKey);
   const signatureBase64 = CryptoJS.enc.Base64.stringify(signatureHmacSha256);
-  console.log(`Signature Components: ${signatureComponents}`);
-  console.log(`Signature HMACSHA256: ${signatureHmacSha256}`);
-  console.log(`Signature: ${signatureBase64}`);
   return `HMACSHA256=${signatureBase64}`;
 
   // const bodySha256 = CryptoJS.enc.Base64.stringify(CryptoJS.SHA256(JSON.stringify(jsonBody)));
@@ -67,15 +61,6 @@ const createPayment = async (paymentBody) => {
     },
   });
 
-  const mockData = JSON.stringify({
-    order: {
-      amount: 20000,
-      invoice_number: 'INV-20210231-0001',
-    },
-    payment: {
-      payment_due_date: 60,
-    },
-  });
   const signature = await generateSignature(paymentData, {
     requestId,
     requestTimestamp,
@@ -96,7 +81,7 @@ const createPayment = async (paymentBody) => {
     },
     data: paymentData,
   };
-  // const resp = await axios.get('https://swapi.dev/api/people/1/');
+
   const response = await axios(config);
   if (!response) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error creating payment');
