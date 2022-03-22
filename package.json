@@ -7,9 +7,7 @@
   "repository": "https://github.com/hagopj13/node-express-boilerplate.git",
   "author": "Hagop Jamkojian <hagopj13@gmail.com>",
   "license": "MIT",
-  "engines": {
-    "node": ">=12.0.0"
-  },
+  "engines": { "node": ">=0.12 < 17.5.0" },
   "scripts": {
     "start": "cross-env NODE_ENV=production nodemon src/index.js",
     "dev": "cross-env NODE_ENV=development nodemon src/index.js",
