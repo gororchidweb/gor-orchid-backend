@@ -34,10 +34,19 @@ const deletePayment = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const paymentNotification = catchAsync(async (req, res) => {
+  console.log('result payment notification:', req);
+  const { body } = req;
+  // console.log('req payment notification:', req);
+  // res.status(httpStatus.OK).send('Payment notification received', data);
+  res.send(req.body);
+});
+
 module.exports = {
   createPayment,
   getPayments,
   getPayment,
   updatePayment,
   deletePayment,
+  paymentNotification,
 };

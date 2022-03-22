@@ -1,38 +1,26 @@
 const express = require('express');
-const auth = require('../../middlewares/auth');
-const validate = require('../../middlewares/validate');
-const bookingValidation = require('../../validations/booking.validation');
-const bookingController = require('../../controllers/booking.controller');
+const paymentController = require('../controllers/payment.controller');
 
 const router = express.Router();
-
-router
-  .route('/')
-  .post(auth('manageBookings'), validate(bookingValidation.createBooking), bookingController.createBooking)
-  .get(validate(bookingValidation.getBookings), bookingController.getBookings);
-
-router
-  .route('/:bookingId')
-  .get(validate(bookingValidation.getBooking), bookingController.getBooking)
-  .patch(auth('manageBookings'), validate(bookingValidation.updateBooking), bookingController.updateBooking)
-  .delete(auth('manageBookings'), validate(bookingValidation.deleteBooking), bookingController.deleteBooking);
+router.route('/');
+router.route('/payments').post(paymentController.paymentNotification);
 
 module.exports = router;
 
 /**
  * @swagger
  * tags:
- *   name: Bookings
- *   description: Booking management and retrieval
+ *   name: Payments
+ *   description: Payment management and retrieval
  */
 
 /**
  * @swagger
- * /bookings:
+ * /payments:
  *   post:
- *     summary: Create a booking
- *     description: Only admins can create booking.
- *     tags: [Bookings]
+ *     summary: Create a payment
+ *     description: Only admins can create payment.
+ *     tags: [Payments]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -42,45 +30,53 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
+ *               - amount
+ *               - name
+ *               - email
+ *               - phone
  *               - userId
  *               - fieldId
- *               - bookingDate
- *               - bookingStatus
+ *               - bookingId
+ *               - transactionStatus
  *               - paymentStatus
- *               - startTime
- *               - endTime
  *             properties:
+ *               amount:
+ *                 type: number
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               phone:
+ *                 type: number
  *               userId:
  *                 type: string
  *               fieldId:
  *                 type: string
- *               bookingDate:
+ *               bookingId:
  *                 type: string
- *               bookingStatus:
+ *               transactionStatus:
  *                 type: string
- *                 enum: ['CONFIRMED', 'CANCELLED', 'RESERVED']
+ *                 enum: ['PENDING', 'SUCCESS', 'FAILED', 'EXPIRED', 'TIMEOUT', 'REDIRECT']
  *               paymentStatus:
  *                 type: string
  *                 enum: ['PAID', 'UNPAID']
- *               startTime:
- *                  type: string
- *               endTime:
- *                 type: string
  *             example:
- *               userId:  '61eff899c53549003313d079'
+ *               amount: 100000
+ *               phone: 081177777548
+ *               name:   'John Doe'
+ *               email:  'john.doe@gmail.com'
+ *               userId: '61eff899c53549003313d079'
  *               fieldId: '61eff899a648348787287171'
- *               bookingDate: '31-01-2022'
- *               bookingStatus: 'CONFIRMED'
+ *               bookingId: '61eff899a648348787287171'
+ *               transactionStatus: 'PENDING'
  *               paymentStatus: 'UNPAID'
- *               startTime:  '8:00'
- *               endTime: '10:00'
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Booking'
+ *                $ref: '#/components/schemas/Payment'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -89,17 +85,58 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *
  *   get:
- *     summary: Get all bookings
- *     description: Only admins can retrieve all bookings.
- *     tags: [Bookings]
+ *     summary: Get all Payments
+ *     description: Only admins can retrieve all payments.
+ *     tags: [Payments]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: bookingDate
+ *         name: amount
+ *         schema:
+ *           type: number
+ *       - in: query
+ *         name: amount
  *         schema:
  *           type: string
- *         description: Booking date
+ *         description: Payment user name
+ *       - in: query
+ *         name: email
+ *         schema:
+ *           type: string
+ *         description: Payment user email
+ *       - in: query
+ *         name: phone
+ *         schema:
+ *           type: number
+ *         description: Payment user phone
+ *       - in: query
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         description: Payment user id
+ *       - in: query
+ *         name: fieldId
+ *         schema:
+ *           type: string
+ *         description: Payment field id
+ *       - in: query
+ *         name: bookingId
+ *         schema:
+ *           type: string
+ *         description: Payment booking id
+ *       - in: query
+ *         name: transactionStatus
+ *         schema:
+ *           type: string
+ *           enum: ['PENDING', 'SUCCESS', 'FAILED', 'EXPIRED', 'TIMEOUT', 'REDIRECT']
+ *         description: Payment transaction status
+ *       - in: query
+ *         name: paymentStatus
+ *         schema:
+ *           type: string
+ *           enum: ['PAID', 'UNPAID', 'RESERVED']
+ *         description: Payment status
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -115,7 +152,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of bookings
+ *         description: Maximum number of payments
  *       - in: query
  *         name: page
  *         schema:
@@ -134,7 +171,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Booking'
+ *                     $ref: '#/components/schemas/Payment'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -155,11 +192,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /bookings/{id}:
+ * /payments/{id}:
  *   get:
- *     summary: Get a booking
- *     description: Only admins can fetch booking.
- *     tags: [Bookings]
+ *     summary: Get a payment
+ *     description: Only admins can fetch payment.
+ *     tags: [Payments]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -168,14 +205,14 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Booking id
+ *         description: Payment id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Booking'
+ *                $ref: '#/components/schemas/Payment'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -184,9 +221,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a booking
- *     description:  Only admins can update booking.
- *     tags: [Bookings]
+ *     summary: Update a payment
+ *     description:  Only admins can update payment.
+ *     tags: [Payments]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -195,7 +232,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Booking id
+ *         description: Payment id
  *     requestBody:
  *       required: true
  *       content:
@@ -203,37 +240,43 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
+ *               amount:
+ *                 type: number
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               phone:
+ *                 type: number
  *               userId:
  *                 type: string
  *               fieldId:
  *                 type: string
- *               bookingDate:
+ *               bookingId:
  *                 type: string
- *               bookingStatus:
+ *               transactionStatus:
  *                 type: string
- *                 enum: ['CONFIRMED', 'CANCELLED', 'RESERVED']
+ *                 enum: ['PENDING', 'SUCCESS', 'FAILED', 'EXPIRED', 'TIMEOUT', 'REDIRECT']
  *               paymentStatus:
  *                 type: string
  *                 enum: ['PAID', 'UNPAID']
- *               startTime:
- *                  type: string
- *               endTime:
- *                 type: string
  *             example:
+ *               amount: 100000
+ *               phone: 081177777548
+ *               name:   'Alexis Sanchez'
+ *               email: 'alexis.sanchez@gmail.com'
  *               userId:  '61eff899c53549003313d079'
  *               fieldId: '61eff899a648348787287171'
- *               bookingDate: '01-02-2022'
- *               bookingStatus: 'RESERVED'
+ *               bookingId: '61eff899a648348787287171'
+ *               transactionStatus: 'SUCCESS'
  *               paymentStatus: 'PAID'
- *               startTime:  '8:00'
- *               endTime: '10:00'
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Booking'
+ *                $ref: '#/components/schemas/Payment'
  *       "400":
  *         $ref: '#/components/responses/DuplicateEmail'
  *       "401":
@@ -244,9 +287,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a booking
- *     description: Only admins can delete booking.
- *     tags: [Bookings]
+ *     summary: Delete a payment
+ *     description: Only admins can delete payment.
+ *     tags: [Payments]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -255,7 +298,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Booking id
+ *         description: Payment id
  *     responses:
  *       "200":
  *         description: No content
