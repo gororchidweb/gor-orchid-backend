@@ -12,7 +12,7 @@ const createBooking = {
     bookingStatus: Joi.string().required().valid('CONFIRMED', 'CANCELLED', 'RESERVED'),
     paymentStatus: Joi.string().required().valid('PAID', 'UNPAID', 'RESERVED'),
     startTime: Joi.string().required(),
-    endTime: Joi.string().required(),
+    endTime: Joi.string(),
   }),
 };
 
